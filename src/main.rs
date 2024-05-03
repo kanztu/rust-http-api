@@ -6,6 +6,7 @@ use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 mod controllers;
+mod db;
 mod dto;
 mod models;
 mod services;
@@ -19,7 +20,7 @@ async fn main() {
         .init();
 
     let user_service = services::user::User::new();
-    let app_state = state::AppState { user_service };
+    let app_state = state::app_state::AppState { user_service };
     // build our application with a route
     let app = Router::new()
         .route("/healthz", get(healthcheck))

@@ -8,11 +8,12 @@ edition = "2021"
 
 [dependencies]
 axum = "0.7.5"
-serde_json = "1.0.116"
 serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1.37.0", features = ["full"] }
 tracing-subscriber = "0.3.18"
-tracing = "0.1.37"
 tower-http  = { version = "0.5.2", features = ["full"] }
 uuid = { version = "1.8.0", features = ["v4"] }
-tower = "0.4.13"
+diesel = { version = "2.1.6", features = ["postgres", "uuid"] }
+
+[profile.release]
+strip = true

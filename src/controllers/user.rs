@@ -6,7 +6,7 @@ use axum::extract::State;
 use axum::{http::StatusCode, Json};
 
 pub async fn create_user(
-    State(state::AppState { user_service }): State<state::AppState>,
+    State(state::app_state::AppState { user_service }): State<state::app_state::AppState>,
     Json(payload): Json<dto::user_dto::CreateUser>,
 ) -> (
     StatusCode,
