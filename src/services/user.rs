@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct User;
 
 use uuid::Uuid;

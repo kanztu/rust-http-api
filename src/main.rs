@@ -1,8 +1,6 @@
 use axum::{
-    handler::Handler,
-    http::StatusCode,
     routing::{get, post},
-    Extension, Json, Router,
+    Router,
 };
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -11,6 +9,7 @@ mod controllers;
 mod dto;
 mod models;
 mod services;
+mod state;
 
 #[tokio::main]
 async fn main() {
@@ -20,12 +19,13 @@ async fn main() {
         .init();
 
     let user_service = services::user::User::new();
-    let user_controller = controllers::user::User::new(user_service);
+    let app_state = state::AppState { user_service };
     // build our application with a route
     let app = Router::new()
         .route("/healthz", get(healthcheck))
-        .route("/users", post(user_controller.create_user()))
-        .layer(TraceLayer::new_for_http());
+        .route("/users", post(controllers::user::create_user))
+        .layer(TraceLayer::new_for_http())
+        .with_state(app_state);
 
     // run our app with hyper, listening globally on port 3000
     println!("listening on 0.0.0.0:3000");
