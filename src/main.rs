@@ -20,7 +20,8 @@ async fn main() {
         .init();
 
     let user_service = services::user::User::new();
-    let app_state = state::app_state::AppState { user_service };
+    let db = db::db::new().await;
+    let app_state = state::app_state::AppState { user_service, db };
     // build our application with a route
     let app = Router::new()
         .route("/healthz", get(healthcheck))

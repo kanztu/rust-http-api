@@ -1,16 +1,18 @@
-// use diesel::pg::PgConnection;
-// use diesel::prelude::*;
+use std::time::Duration;
 
-// #[derive(Clone)]
-// pub struct Db {
-//     conn: &mut PgConnection,
-// }
+use sea_orm::{ConnectOptions, Database, DatabaseConnection};
 
-// impl Db {
-//     pub fn new() -> Self {
-//         let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-//         let conn = PgConnection::establish(&database_url)
-//             .unwrap_or_else(|_| panic!("Error connecting to {}", database_url));
-//         Self { conn }
-//     }
-// }
+pub async fn new() -> DatabaseConnection {
+    let mut opt = ConnectOptions::new("postgres://test:test@localhost/test".to_owned());
+    opt.max_connections(100)
+        .min_connections(5)
+        .connect_timeout(Duration::from_secs(8))
+        .idle_timeout(Duration::from_secs(8))
+        .max_lifetime(Duration::from_secs(8))
+        .sqlx_logging(true);
+
+    let rtn = Database::connect(opt).await;
+    let db = rtn.unwrap();
+
+    return db;
+}

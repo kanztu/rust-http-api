@@ -6,11 +6,11 @@ use axum::extract::State;
 use axum::{http::StatusCode, Json};
 
 pub async fn create_user(
-    State(state::app_state::AppState { user_service }): State<state::app_state::AppState>,
+    State(state::app_state::AppState { user_service, .. }): State<state::app_state::AppState>,
     Json(payload): Json<dto::user_dto::CreateUser>,
 ) -> (
     StatusCode,
-    Json<controllers::types::Response<models::user::User>>,
+    Json<controllers::types::Response<models::user::Model>>,
 ) {
     let rtn = user_service.create_user(payload);
     let resp = match rtn {

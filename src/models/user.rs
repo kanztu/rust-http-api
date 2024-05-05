@@ -1,16 +1,15 @@
-use diesel::prelude::*;
+use sea_orm::entity::prelude::*;
 use serde::Serialize;
 
-diesel::table! {
-    users (id) {
-        id -> Uuid,
-        username -> Text,
-    }
-}
-
-#[derive(Queryable, Selectable, Serialize)]
-#[diesel(table_name = users)]
-pub struct User {
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize)]
+#[sea_orm(table_name = "users")]
+pub struct Model {
+    #[sea_orm(primary_key)]
     pub id: String,
     pub username: String,
 }
+
+#[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
+pub enum Relation {}
+
+impl ActiveModelBehavior for ActiveModel {}
